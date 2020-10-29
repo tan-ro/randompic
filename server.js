@@ -1,48 +1,39 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
+const express = require("express");
+const app = express();
 
-//Allow all requests from all domains & localhost
-app.all('/*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", "POST, GET");
-  next();
+app.use(express.json());
+
+app.post("/content/resources/find", async (request, response) => {
+  response.send({
+    type: "SUCCESS",
+    resources: [
+      {
+        type: "IMAGE",
+        id: "123456",
+        name: "Animal",
+        url: "http://lorempixel.com/1200/700/animals",
+        thumbnail: {
+        url: "http://lorempixel.com/500/333/animals",
+          width: 500,
+          height: 333  
+        },
+        contentType: "image/jpeg"
+      },
+
+      {
+        type: "IMAGE",
+        id: "456123",
+        name: "Nature",
+        url: "http://lorempixel.com/1200/700/nature",
+        thumbnail: {
+        url: "http://lorempixel.com/500/333/nature",
+          width: 500,
+          height: 333
+        },
+        contentType: "image/jpeg"
+      }
+    ]
+  });
 });
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-
-var ingredients = [
-    {
-        "id": "234kjw",
-        "text": "Eggs"
-    },
-    {
-        "id": "as82w",
-        "text": "Milk"
-    },
-    {
-        "id": "234sk1",
-        "text": "Bacon"
-    },
-    {
-        "id": "ppo3j3",
-        "text": "Frog Legs"
-    }
-];
-
-
-app.get('/ingredients', function(req, res) {
-    console.log("GET From SERVER");
-    res.send(ingredients);
-});
-
-app.post('/ingredients', function(req, res) {
-    var ingredient = req.body;
-    console.log(req.body);
-    ingredients.push(ingredient);
-    res.status(200).send("Successfully posted ingredient");
-});
-
-app.listen(6069);
+app.listen(process.env.PORT || 3000);
